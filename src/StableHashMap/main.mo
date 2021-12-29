@@ -20,8 +20,11 @@ actor {
 
 
     system func preupgrade() {
+        table := stableHashMap.table;
+        _count := stableHashMap._count;
     };
 
     system func postupgrade() {
+        stableHashMap := StableHashMap.HashMap<Text, Nat>(1, Text.equal, Text.hash, table, _count);
     };
 };
