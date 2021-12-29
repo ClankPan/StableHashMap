@@ -3,19 +3,6 @@
     "StableHashMap": {
       "main": "src/StableHashMap/main.mo",
       "type": "motoko"
-    },
-    "StableHashMap_assets": {
-      "dependencies": [
-        "StableHashMap"
-      ],
-      "frontend": {
-        "entrypoint": "src/StableHashMap_assets/src/index.html"
-      },
-      "source": [
-        "src/StableHashMap_assets/assets",
-        "dist/StableHashMap_assets/"
-      ],
-      "type": "assets"
     }
   },
   "defaults": {
