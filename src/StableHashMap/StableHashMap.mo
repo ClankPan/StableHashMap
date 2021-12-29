@@ -13,26 +13,28 @@
 
 import Prim "mo:⛔";
 import P "mo:base/Prelude";
-import A "mo:base/PArray";
-import Hash "mo:base/PHash";
-import Iter "mo:base/PIter";
-import AssocList "mo:base/PAssocList";
+import A "mo:base/Array";
+import Hash "mo:base/Hash";
+import Iter "mo:base/Iter";
+import AssocList "mo:base/AssocList";
 
 module {
 
 
   // key-val list type
-  type KVs<K, V> = AssocList.AssocList<K, V>;
+  public type KVs<K, V> = AssocList.AssocList<K, V>;
 
   /// An imperative HashMap with a minimal object-oriented interface.
   /// Maps keys of type `K` to values of type `V`.
   public class HashMap<K, V>(
     initCapacity : Nat,
     keyEq : (K, K) -> Bool,
-    keyHash : K -> Hash.Hash) {
+    keyHash : K -> Hash.Hash,
+    _table : [var KVs<K, V>],
+    __count : Nat) {
 
-    var table : [var KVs<K, V>] = [var];
-    var _count : Nat = 0;
+    public var table : [var KVs<K, V>] = _table;
+    public var _count : Nat = __count;
 
     /// Returns the number of entries in this HashMap.
     public func size() : Nat = _count;
@@ -166,57 +168,57 @@ module {
     keyEq : (K, K) -> Bool,
     keyHash : K -> Hash.Hash
   ) : HashMap<K, V> {
-    let h2 = HashMap<K, V>(h.size(), keyEq, keyHash);
+    let h2 = HashMap<K, V>(h.size(), keyEq, keyHash, h.table, h._count);
     for ((k,v) in h.entries()) {
       h2.put(k,v);
     };
     h2
   };
 
-  /// Clone from any iterator of key-value pairs
-  public func fromIter<K, V>(
-    iter : Iter.Iter<(K, V)>,
-    initCapacity : Nat,
-    keyEq : (K, K) -> Bool,
-    keyHash : K -> Hash.Hash
-  ) : HashMap<K, V> {
-    let h = HashMap<K, V>(initCapacity, keyEq, keyHash);
-    for ((k, v) in iter) {
-      h.put(k, v);
-    };
-    h
-  };
+  // /// Clone from any iterator of key-value pairs
+  // public func fromIter<K, V>(
+  //   iter : Iter.Iter<(K, V)>,
+  //   initCapacity : Nat,
+  //   keyEq : (K, K) -> Bool,
+  //   keyHash : K -> Hash.Hash
+  // ) : HashMap<K, V> {
+  //   let h = HashMap<K, V>(initCapacity, keyEq, keyHash);
+  //   for ((k, v) in iter) {
+  //     h.put(k, v);
+  //   };
+  //   h
+  // };
 
-  public func map<K, V1, V2>(
-    h : HashMap<K, V1>,
-    keyEq : (K, K) -> Bool,
-    keyHash : K -> Hash.Hash,
-    mapFn : (K, V1) -> V2,
-  ) : HashMap<K, V2> {
-    let h2 = HashMap<K, V2>(h.size(), keyEq, keyHash);
-    for ((k, v1) in h.entries()) {
-      let v2 = mapFn(k, v1);
-      h2.put(k, v2);
-    };
-    h2
-  };
+  // public func map<K, V1, V2>(
+  //   h : HashMap<K, V1>,
+  //   keyEq : (K, K) -> Bool,
+  //   keyHash : K -> Hash.Hash,
+  //   mapFn : (K, V1) -> V2,
+  // ) : HashMap<K, V2> {
+  //   let h2 = HashMap<K, V2>(h.size(), keyEq, keyHash);
+  //   for ((k, v1) in h.entries()) {
+  //     let v2 = mapFn(k, v1);
+  //     h2.put(k, v2);
+  //   };
+  //   h2
+  // };
 
-  public func mapFilter<K, V1, V2>(
-    h : HashMap<K, V1>,
-    keyEq : (K, K) -> Bool,
-    keyHash : K -> Hash.Hash,
-    mapFn : (K, V1) -> ?V2,
-  ) : HashMap<K, V2> {
-    let h2 = HashMap<K, V2>(h.size(), keyEq, keyHash);
-    for ((k, v1) in h.entries()) {
-      switch (mapFn(k, v1)) {
-        case null { };
-        case (?v2) {
-          h2.put(k, v2);
-        };
-      }
-    };
-    h2
-  };
+  // public func mapFilter<K, V1, V2>(
+  //   h : HashMap<K, V1>,
+  //   keyEq : (K, K) -> Bool,
+  //   keyHash : K -> Hash.Hash,
+  //   mapFn : (K, V1) -> ?V2,
+  // ) : HashMap<K, V2> {
+  //   let h2 = HashMap<K, V2>(h.size(), keyEq, keyHash);
+  //   for ((k, v1) in h.entries()) {
+  //     switch (mapFn(k, v1)) {
+  //       case null { };
+  //       case (?v2) {
+  //         h2.put(k, v2);
+  //       };
+  //     }
+  //   };
+  //   h2
+  // };
 
 }
