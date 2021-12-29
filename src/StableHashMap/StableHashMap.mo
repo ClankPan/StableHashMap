@@ -24,6 +24,12 @@ module {
   // key-val list type
   public type KVs<K, V> = AssocList.AssocList<K, V>;
 
+  // stableにする変数の型（export用）
+  public type Vars<K, V> = {
+      table :  [var KVs<K, V>];
+      _count : Nat;
+    };
+
   /// An imperative HashMap with a minimal object-oriented interface.
   /// Maps keys of type `K` to values of type `V`.
   public class HashMap<K, V>(
@@ -31,8 +37,19 @@ module {
     keyEq : (K, K) -> Bool,
     keyHash : K -> Hash.Hash) {
 
-    public var table : [var KVs<K, V>] = [var];
-    public var _count : Nat = 0;
+    var table : [var KVs<K, V>] = [var];
+    var _count : Nat = 0;
+
+    public func initStableVars() : Vars<K, V> {
+      return {table = [var]; _count = 0;};
+    };
+    public func exportVars() : Vars<K, V> {
+      return {table = table; _count = _count;};
+    };
+    public func importVars(vars : Vars<K, V>) {
+      table := vars.table;
+      _count := vars._count;
+    };
 
     /// Returns the number of entries in this HashMap.
     public func size() : Nat = _count;
