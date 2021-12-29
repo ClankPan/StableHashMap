@@ -12,11 +12,11 @@
 ///  Double the current capacity when the expected bucket list size grows beyond a certain constant.
 
 import Prim "mo:⛔";
-import P "Prelude";
-import A "Array";
-import Hash "Hash";
-import Iter "Iter";
-import AssocList "AssocList";
+import P "mo:base/Prelude";
+import A "mo:base/PArray";
+import Hash "mo:base/PHash";
+import Iter "mo:base/PIter";
+import AssocList "mo:base/PAssocList";
 
 module {
 
