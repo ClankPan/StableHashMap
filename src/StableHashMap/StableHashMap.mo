@@ -22,7 +22,7 @@ module {
 
 
   // key-val list type
-  public type KVs<K, V> = AssocList.AssocList<K, V>;
+  type KVs<K, V> = AssocList.AssocList<K, V>;
 
   // stableにする変数の型（export用）
   public type Vars<K, V> = {
@@ -40,16 +40,23 @@ module {
     var table : [var KVs<K, V>] = [var];
     var _count : Nat = 0;
 
-    public func initStableVars() : Vars<K, V> {
-      return {table = [var]; _count = 0;};
-    };
     public func exportVars() : Vars<K, V> {
       return {table = table; _count = _count;};
     };
+
     public func importVars(vars : Vars<K, V>) {
       table := vars.table;
       _count := vars._count;
     };
+    
+    // // 参照渡しではなく値渡しにすることで，HashMapClass以外での値操作を防ぐ．
+    // // ただし，使用するメモリが増える．
+    // // table.copyは仮
+    
+    // public func safe_exportVars() : Vars<K, V> {
+    //   return {table = table.copy; _count = _count.copy;};
+    // };
+
 
     /// Returns the number of entries in this HashMap.
     public func size() : Nat = _count;

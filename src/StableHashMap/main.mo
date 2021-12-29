@@ -4,7 +4,7 @@ import Text "mo:base/Text";
 actor {
 
     var stableHashMap = StableHashMap.HashMap<Text, Nat>(1, Text.equal, Text.hash);
-    stable var stableVars = stableHashMap.initStableVars();
+    stable var stableVars = stableHashMap.exportVars();
 
 
     public func put(name : Text, value : Nat) : async Text {
@@ -12,7 +12,7 @@ actor {
         return name;
     };
 
-    public query func geet(name : Text) : async ?Nat {
+    public query func get(name : Text) : async ?Nat {
         return stableHashMap.get(name);
     }; 
 
