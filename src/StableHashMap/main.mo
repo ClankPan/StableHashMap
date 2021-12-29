@@ -5,7 +5,7 @@ actor {
 
     stable var table : [var StableHashMap.KVs<Text, Nat>] = [var];
     stable var _count : Nat = 0;
-    var stableHashMap = StableHashMap.HashMap<Text, Nat>(1, Text.equal, Text.hash, table, _count);
+    var stableHashMap = StableHashMap.HashMap<Text, Nat>(1, Text.equal, Text.hash);
 
 
     public func put(name : Text, value : Nat) : async Text {
@@ -25,6 +25,8 @@ actor {
     };
 
     system func postupgrade() {
-        stableHashMap := StableHashMap.HashMap<Text, Nat>(1, Text.equal, Text.hash, table, _count);
+        stableHashMap := StableHashMap.HashMap<Text, Nat>(1, Text.equal, Text.hash);
+        stableHashMap.table := table;
+        stableHashMap._count := _count;
     };
 };
